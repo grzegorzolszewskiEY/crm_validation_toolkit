@@ -1,10 +1,10 @@
 """
 This module contains code to create reports on
-a Streamlit UI.
+a Streamlit UI. Still a demo.
 """
 
 import streamlit as st
-from crm_validator.ccf_validator import CCFValidator
+from ccf.ccf_validator import CCFValidator
 
 if __name__ == "__main__":
     ccf_validator = CCFValidator()
@@ -24,7 +24,7 @@ if __name__ == "__main__":
     # Only run this if all inputs are provided
     if all([m_b, m_ex, N]):
         # Perform the assignment process test
-        validation_result = ccf_validator.validate_assignment_process(
+        validation_result = ccf_validator.assignment_process(
             m_ex=m_ex,
             m_b=m_b,
             N=N
