@@ -11,6 +11,6 @@ Implemented
 - CCF
     - [x] CCF assignment process statistics
     - [x] Facilities covered by an EAD approach
-    - [ ] CCF back-testing
+    - [x] CCF back-testing
     - [ ] EAD back-testing
     - [ ] Current vs initial gAUC
