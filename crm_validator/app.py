@@ -5,6 +5,7 @@ a Streamlit UI. Still a demo.
 
 import streamlit as st
 from ccf.ccf_validator import CCFValidator
+from constants import PASSED, METRIC, REPORT
 
 if __name__ == "__main__":
     ccf_validator = CCFValidator()
@@ -23,6 +24,8 @@ if __name__ == "__main__":
 
     # Only run this if all inputs are provided
     if all([m_b, m_ex, N]):
+        st.header("REPORT")
+
         # Perform the assignment process test
         validation_result = ccf_validator.assignment_process(
             m_ex=m_ex,
@@ -30,5 +33,11 @@ if __name__ == "__main__":
             N=N
         )
 
+        st.markdown(f"PASSED : {validation_result[PASSED]}")
+
         # Write output
-        st.write(validation_result)
+        st.subheader("Metrics calculated")
+        st.write(validation_result[METRIC])
+
+        st.subheader("Report")
+        st.write(validation_result[REPORT])
