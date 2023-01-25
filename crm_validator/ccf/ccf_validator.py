@@ -2,7 +2,8 @@
 This module contains code to validate CCF models.
 """
 
-from constants import PASSED, METRIC, REPORT
+from crm_validator.constants import PASSED, METRIC, REPORT
+from crm_validator.exceptions import ValidationError
 
 
 class CCFValidator:
@@ -23,37 +24,26 @@ class CCFValidator:
         exclusions (`m_b`), number of facilities excluded (`m_ex`), and number
         of facilities for validation (`N`).
         """
-        try:
-            assert m_ex is not None
-            assert m_b is not None
-            assert N is not None
-            assert m_ex < m_b
-            assert N < m_b - m_ex
+        inputs = [m_ex, m_b, N]
 
-            return {
-                PASSED: True,
-                METRIC: {
-                    "name": "m_ex/m_b",
-                    "value": m_ex / m_b
-                },
-                REPORT: {
-                    "m_ex": m_ex,
-                    "m_b": m_b,
-                    "N": N
-                }
-            }
+        assert all(inputs), f"At least one input of {inputs} not provided."
+        if m_ex > m_b:
+            raise ValidationError("m_ex is greater than m_b.")
+        if N > m_b - m_ex:
+            raise ValidationError("N is greater than m_b - m_ex.")
 
-        except AssertionError as e:
-            return {
-                PASSED: False,
-                METRIC: {
-                    "name": "m_ex/m_b",
-                    "value": m_ex / m_b
-                },
-                REPORT: {
-                    "Error": e
-                }
+        return {
+            PASSED: True,
+            METRIC: {
+                "name": "m_ex/m_b",
+                "value": m_ex / m_b
+            },
+            REPORT: {
+                "m_ex": m_ex,
+                "m_b": m_b,
+                "N": N
             }
+        }
 
     def ead_covered_facilities(
         self,
@@ -64,31 +54,21 @@ class CCFValidator:
         This function reports validates the facilities covered by an EAD
         approach. Summary statistic reported is `m_ead / N`.
         """
-        try:
-            assert m_ead is not None
-            assert N is not None
-            assert m_ead < N
+        inputs = [m_ead, N]
 
-            return {
-                PASSED: True,
-                METRIC: {
-                    "name": "m_ead/N",
-                    "value": m_ead / N
-                },
-                REPORT: {
-                    "m_ead": m_ead,
-                    "N": N
-                }
-            }
+        # Validations
+        assert all(inputs), f"At least one input of {inputs} not provided."
+        if m_ead > N:
+            raise ValidationError("m_ead is greater than N.")
 
-        except AssertionError as e:
-            return {
-                PASSED: False,
-                METRIC: {
-                    "name": "m_ead/N",
-                    "value": m_ead / N
-                },
-                REPORT: {
-                    "Error": e
-                }
+        return {
+            PASSED: True,
+            METRIC: {
+                "name": "m_ead/N",
+                "value": m_ead / N
+            },
+            REPORT: {
+                "m_ead": m_ead,
+                "N": N
             }
+        }
