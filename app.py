@@ -4,56 +4,32 @@ a Streamlit UI. Still a demo.
 """
 
 import streamlit as st
-from crm_validator.ccf.ccf_validator import CCFValidator
-from crm_validator.constants import PASSED, METRIC, REPORT
+import pandas as pd
+from crm_validator.ccf.ccf_wrapper import CCFWrapper
+# from crm_validator.constants import PASSED, METRIC, REPORT
 
 if __name__ == "__main__":
-    ccf_validator = CCFValidator()
-
     # Set page title
     st.title("CCF Validator Demo")
 
     st.write("Demo page to show validator UI")
-    st.write("Uses CCF assignment process test.")
 
     # Get required inputs
-    # This will likely be changed to use a file upload system,
-    # or removed entirely.
-    m_b = st.number_input(
-        "Enter initial number of facilities",
-        min_value=0,
-        step=1,
-        format="%i"
-    )
-    m_ex = st.number_input(
-        "Enter number of facilities excluded",
-        min_value=0,
-        step=1,
-        format="%i"
-    )
-    N = st.number_input(
-        "Enter number of facilities for validation",
-        min_value=0,
-        step=1,
-        format="%i"
-    )
+    input_file = st.file_uploader("Choose a file")
 
-    # Only run this if all inputs are provided
-    if all([m_b, m_ex, N]):
-        st.header("REPORT")
-
-        # Perform the assignment process test
-        validation_result = ccf_validator.assignment_process(
-            m_ex=m_ex,
-            m_b=m_b,
-            N=N
+    if input_file is not None:
+        # Only run this if input is provided
+        ccf_data = pd.read_csv(
+            input_file,
+            delimiter=";",
+            header=0
         )
+        st.write("Data sample")
+        st.write(ccf_data.head())
 
-        st.markdown(f"PASSED : {validation_result[PASSED]}")
+        ccf_tester = CCFWrapper(ccf_data)
 
-        # Write output
-        st.subheader("Metrics calculated")
-        st.write(validation_result[METRIC])
-
-        st.subheader("Report")
-        st.write(validation_result[REPORT])
+        results = ccf_tester.run_validation_tests()
+        for test_result in results:
+            st.subheader(test_result["test"])
+            st.write(test_result["report"])
