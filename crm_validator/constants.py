@@ -1,3 +1,5 @@
 PASSED = "passed"
 METRIC = "metric"
 REPORT = "report"
+NAME = "name"
+PLOT = "plot"

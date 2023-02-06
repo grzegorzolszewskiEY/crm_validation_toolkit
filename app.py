@@ -3,10 +3,10 @@ This module contains code to create reports on
 a Streamlit UI. Still a demo.
 """
 
-import streamlit as st
 import pandas as pd
+import streamlit as st
 from crm_validator.ccf.ccf_wrapper import CCFWrapper
-# from crm_validator.constants import PASSED, METRIC, REPORT
+
 
 if __name__ == "__main__":
     # Set page title
@@ -21,7 +21,6 @@ if __name__ == "__main__":
         # Only run this if input is provided
         ccf_data = pd.read_csv(
             input_file,
-            delimiter=";",
             header=0
         )
         st.write("Data sample")
@@ -31,5 +30,38 @@ if __name__ == "__main__":
 
         results = ccf_tester.run_validation_tests()
         for test_result in results:
-            st.subheader(test_result["test"])
-            st.write(test_result["report"])
+            if type(test_result) == dict:
+                st.header(test_result["test"])
+                st.write(test_result["report"])
+            else:
+                st.header(test_result.name)
+                st.markdown(
+                    "Test result : **"
+                    f"{'Passed' if test_result.passed else 'Failed'}"
+                    "**"
+                )
+
+                st.subheader("Calculated metrics")
+                metric_names = test_result.metrics.keys()
+                n_metrics = len(metric_names)
+                columns = st.columns(n_metrics)
+                for i, metric in enumerate(metric_names):
+                    columns[i].metric(
+                        label=metric,
+                        value=test_result.metrics[metric]
+                    )
+
+                st.subheader("Report")
+                report_keys = test_result.reports.keys()
+                report_values = test_result.reports.values()
+                st.table(
+                    {
+                        "QUANTITY": report_keys,
+                        "VALUE": report_values
+                    }
+                )
+
+                if test_result.plots:
+                    st.subheader("Plots")
+                    for plot in test_result.plots:
+                        st.pyplot(plot)

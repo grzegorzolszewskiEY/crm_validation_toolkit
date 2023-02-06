@@ -3,9 +3,9 @@ This module contains code to validate CCF models.
 """
 
 import numpy as np
-from crm_validator.constants import METRIC, PASSED, REPORT
 from crm_validator.exceptions import ValidationError
 from scipy.stats import ttest_1samp
+from crm_validator.report import Report, PlotParams
 
 
 class CCFValidator:
@@ -30,25 +30,31 @@ class CCFValidator:
         exclusions (`m_b`), number of facilities excluded (`m_ex`), and number
         of facilities for validation (`N`).
         """
-        inputs = [m_ex, m_b, N]
-
-        assert all(inputs), "At least one input not provided."
         if m_ex > m_b:
             raise ValidationError("m_ex is greater than m_b.")
         if N > m_b - m_ex:
             raise ValidationError("N is greater than m_b - m_ex.")
 
-        return {
-            PASSED: True,
-            METRIC: {
+        # Create report
+        return Report(
+            passed=True,
+            metrics={
                 "m_ex/m_b": m_ex / m_b
             },
-            REPORT: {
+            reports={
                 "m_ex": m_ex,
                 "m_b": m_b,
                 "N": N
-            }
-        }
+            },
+            plots=[
+                PlotParams(
+                    values=[m_ex, N],
+                    labels=["Exclusions", "Number of facilities"],
+                    kind="pie",
+                    title="Exclusions in dataset"
+                )
+            ]
+        )
 
     def ead_covered_facilities(
         self,
@@ -59,23 +65,27 @@ class CCFValidator:
         This function reports validates the facilities covered by an EAD
         approach. Summary statistic reported is `m_ead / N`.
         """
-        inputs = [m_ead, N]
-
-        # Validations
-        assert all(inputs), "At least one input not provided."
         if m_ead > N:
             raise ValidationError("m_ead is greater than N.")
 
-        return {
-            PASSED: True,
-            METRIC: {
+        return Report(
+            passed=True,
+            metrics={
                 "m_ead/N": m_ead / N
             },
-            REPORT: {
+            reports={
                 "m_ead": m_ead,
                 "N": N
-            }
-        }
+            },
+            plots=[
+                PlotParams(
+                    values=[m_ead, N - m_ead],
+                    labels=["EAD Covered", "CCF Covered"],
+                    kind="pie",
+                    title="EAD covered facilities"
+                )
+            ]
+        )
 
     # ------------------------
     # PREDICTIVE ABILITY TESTS
@@ -122,14 +132,14 @@ class CCFValidator:
         if p_value > test_level:
             passed = False
 
-        return {
-            PASSED: passed,
-            METRIC: {
+        return Report(
+            passed=passed,
+            metrics={
                 "p-value": p_value,
                 "T-statistic": T_statistic,
                 "N - m_ead": N - m_ead
             },
-            REPORT: {
+            reports={
                 "N - m_ead": N - m_ead,
                 "Estimated CCF average": estimated_ccfs.mean(),
                 "Realised CCF average": realised_ccfs.mean(),
@@ -150,8 +160,16 @@ class CCFValidator:
                 "p-value": p_value,
                 "Variance": (estimated_ccfs - realised_ccfs).var(),
                 "Outliers": m_outliers
-            }
-        }
+            },
+            plots=[
+                PlotParams(
+                    values=[estimated_ccfs, realised_ccfs],
+                    labels=["Estimated CCFs", "Realised CCFs"],
+                    kind="double_hist",
+                    title="Estimated vs Realised CCF values"
+                )
+            ]
+        )
 
     def predictive_power_ead(
         self,
@@ -163,9 +181,6 @@ class CCFValidator:
         Function to validate EAD assignment. The aim is to ensure that
         estimated EADs are statistically greater than real drawn amounts.
         """
-        inputs = [drawn_amounts, estimated_eads]
-        assert all(inputs), "At least one input not provided."
-
         m_ead = len(estimated_eads)
         assert len(drawn_amounts) == m_ead, "Arrays not equal length."
 
@@ -182,13 +197,13 @@ class CCFValidator:
         if p_value < test_level:
             passed = False
 
-        return {
-            PASSED: passed,
-            METRIC: {
+        return Report(
+            passed=passed,
+            metrics={
                 "p-value": p_value,
                 "T-statistic": T_statistic
             },
-            REPORT: {
+            reports={
                 "M_ead": m_ead,
                 "Sum of estimated EAD": estimated_eads.sum(),
                 "Sum of drawn amounts": drawn_amounts.sum(),
@@ -196,13 +211,14 @@ class CCFValidator:
                 "p-value": p_value,
                 "Variance": (estimated_eads - drawn_amounts).var()
             }
-        }
+        )
 
     # --------------------
     # DISCRIMINATORY POWER
     # --------------------
 
     def discriminatory_power(self):
+        # TODO
         return
 
     # ---------------------
@@ -219,23 +235,27 @@ class CCFValidator:
         Checks number of missing values, and total values
         available for validation.
         """
-        inputs = [m_miss, M]
-
-        assert all(inputs), "At least one input not provided."
         if m_miss > M:
             raise ValidationError("M_miss is greater than M.")
 
-        return {
-            PASSED: True,
-            METRIC: {
+        return Report(
+            passed=True,
+            metrics={
                 "m_miss/M": m_miss / M
             },
-            REPORT: {
+            reports={
                 "m_miss": m_miss,
                 "M": M,
                 "m_miss / M": m_miss / M
-            }
-        }
+            },
+            plots=[
+                PlotParams(
+                    values=[m_miss, M - m_miss],
+                    labels=["Missing", "Non-missing"],
+                    kind="pie"
+                )
+            ]
+        )
 
     def ccf_portfolio_distribution(
         self,
@@ -254,30 +274,20 @@ class CCFValidator:
         exposure_start: float,
         exposure_end: float,
     ):
-        inputs = [
-            m_ead,
-            estimated_EADs,
-            sum_drawings,
-            exposure_start,
-            exposure_end
-        ]
-
-        assert all(inputs), "At least one input not provided."
-
-        return {
-            PASSED: True,
-            METRIC: {
+        return Report(
+            passed=True,
+            metrics={
                 "Total facilities": m_ead,
                 "Total estimated EAD": sum(estimated_EADs),
                 "Sum of drawings": sum(sum_drawings),
                 "Total exposure (start)": sum(exposure_start),
                 "Total exposure (end)": sum(exposure_end)
             },
-            REPORT: {
+            reports={
                 "Total facilities": m_ead,
                 "Total estimated EAD": sum(estimated_EADs),
                 "Sum of drawings": sum(sum_drawings),
                 "Total exposure (start)": sum(exposure_start),
                 "Total exposure (end)": sum(exposure_end)
             }
-        }
+        )

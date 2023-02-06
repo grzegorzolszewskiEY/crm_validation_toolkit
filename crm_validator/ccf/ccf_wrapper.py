@@ -50,14 +50,17 @@ class CCFWrapper:
             ]
         )
 
-        return {
-            "test": "CCF assignment process (back-testing)",
-            "report": self.validator.assignment_process_back_testing(
-                m_b=m_b,
-                m_ex=m_ex,
-                N=N
-            )
-        }
+        # Get report
+        report = self.validator.assignment_process_back_testing(
+            m_b=m_b,
+            m_ex=m_ex,
+            N=N
+        )
+
+        # Add report name
+        report.name = "CCF assignment process (back-testing)"
+
+        return report
 
     def validate_ead_covered_facilities(self):
         """
@@ -79,13 +82,13 @@ class CCFWrapper:
             ]
         )
 
-        return {
-            "test": "EAD covered facilities",
-            "report": self.validator.ead_covered_facilities(
-                m_ead=m_ead,
-                N=N
-            )
-        }
+        report = self.validator.ead_covered_facilities(
+            m_ead=m_ead,
+            N=N
+        )
+
+        report.name = "EAD covered facilities"
+        return report
 
     # ------------------------
     # PREDICTIVE ABILITY TESTS
@@ -174,14 +177,14 @@ class CCFWrapper:
             (self.ccf_data["marked"] == "ead_covered")
         ]
 
-        return {
-            "test": "EAD predictive ability",
-            "report": self.validator.predictive_power_ead(
-                drawn_amounts=drawn_amounts,
-                estimated_eads=estimated_eads,
-                test_level=test_level
-            )
-        }
+        report = self.validator.predictive_power_ead(
+            drawn_amounts=drawn_amounts,
+            estimated_eads=estimated_eads,
+            test_level=test_level
+        )
+        report.name = "EAD predictive ability"
+
+        return report
 
     # --------------------
     # DISCRIMINATORY POWER
@@ -213,13 +216,13 @@ class CCFWrapper:
             ]
         )
 
-        return {
-            "test": "Assignment process (portfolio)",
-            "report": self.validator.assignment_process_portfolio(
-                m_miss=m_miss,
-                M=M
-            )
-        }
+        report = self.validator.assignment_process_portfolio(
+            m_miss=m_miss,
+            M=M
+        )
+        report.name = "Assignment process (portfolio)"
+
+        return report
 
     def validate_ccf_portfolio_distribution(self):
         return {
@@ -248,16 +251,16 @@ class CCFWrapper:
         exposure_end = self.ccf_data["exposure_at_end"]
         sum_drawings = self.ccf_data["drawn_amount"]
 
-        return {
-            "test": "EAD application portfolio",
-            "report": self.validator.ead_application_portfolio(
-                m_ead=m_ead,
-                estimated_EADs=estimated_EADs,
-                sum_drawings=sum_drawings,
-                exposure_start=exposure_start,
-                exposure_end=exposure_end
-            )
-        }
+        report = self.validator.ead_application_portfolio(
+            m_ead=m_ead,
+            estimated_EADs=estimated_EADs,
+            sum_drawings=sum_drawings,
+            exposure_start=exposure_start,
+            exposure_end=exposure_end
+        )
+        report.name = "EAD application portfolio"
+
+        return report
 
     def run_validation_tests(self):
         results = []
@@ -266,14 +269,14 @@ class CCFWrapper:
         results.append(self.validate_assignment_process_back_testing())
         results.append(self.validate_ead_covered_facilities())
 
-        # Predictive ability tests
-        results.append(self.validate_ccf_predictive_power())
-        results.append(self.validate_ead_predictive_power())
+        # # Predictive ability tests
+        # results.append(self.validate_ccf_predictive_power())
+        # results.append(self.validate_ead_predictive_power())
 
-        # Discriminatory power test
+        # # Discriminatory power test
         results.append(self.validate_discriminatory_power())
 
-        # Application portfolio tests
+        # # Application portfolio tests
         results.append(self.validate_assignment_process_portfolio())
         results.append(self.validate_ccf_portfolio_distribution())
         results.append(self.validate_ead_application_portfolio())
