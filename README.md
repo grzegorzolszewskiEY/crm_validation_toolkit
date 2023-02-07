@@ -4,8 +4,8 @@ Toolkit to validate credit risk models.
 Steps to run
 - Ensure Python is installed on your system
 - Ensure requirements are on your system (Run `pip install -r requirements.txt`)
-- Run the validator using
-    `python -m streamlit crm_validator/app.py`
+- Run Streamlit UI using
+    `python -m streamlit run app.py`
 
 Implemented
 - CCF
@@ -13,9 +13,10 @@ Implemented
     - [x] Facilities covered by an EAD approach
     - [x] CCF back-testing
     - [x] EAD back-testing
-    - [ ] Current vs initial gAUC
-    - [ ] Assignment process (portfolio level)
-    - [ ] Portfolio distribution
+    - [ ] Discriminatory power
+    - [x] Assignment process (portfolio level)
+    - [ ] CCF portfolio distribution
+    - [x] EAD portfolio distribution
 
 Data requirements
 - CCF
