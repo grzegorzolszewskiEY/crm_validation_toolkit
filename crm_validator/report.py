@@ -22,9 +22,10 @@ class PlotParams:
         self.title = title
 
 
-class Report:
+class SubReport:
     """
-    This class acts as a report format.
+    This class is a basic report format.
+    Can be used for plotting.
     """
     def __init__(
         self,
@@ -32,12 +33,14 @@ class Report:
         metrics: dict,
         reports: dict,
         name: str = None,
+        description: str = None,
         plots: List[PlotParams] = None
     ) -> None:
         self.name = name
         self.passed = passed
         self.metrics = metrics
         self.reports = reports
+        self.description = description
         self.plots = []
 
         if plots:
@@ -105,4 +108,28 @@ class Report:
 
         if plot_params.title:
             plt.title(plot_params.title)
+
         return fig
+
+
+class Report:
+    def __init__(
+        self,
+        reports: List[SubReport],
+        name: str = None
+    ) -> None:
+        self.name = name
+        self.reports = reports
+
+    def __str__(self) -> str:
+        return str(
+            {
+                "name": self.name,
+                "sub-reports": [
+                    str(report) for report in self.reports
+                ]
+            }
+        )
+
+    def __iter__(self) -> List[SubReport]:
+        return iter(self.reports)

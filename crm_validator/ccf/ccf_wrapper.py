@@ -8,6 +8,7 @@ import numpy as np
 import pandas as pd
 from crm_validator.ccf.ccf_validator import CCFValidator
 from crm_validator.exceptions import ValidationError
+from crm_validator.report import Report
 
 
 class CCFWrapper:
@@ -51,16 +52,16 @@ class CCFWrapper:
         )
 
         # Get report
-        report = self.validator.assignment_process_back_testing(
+        subreport = self.validator.assignment_process_back_testing(
             m_b=m_b,
             m_ex=m_ex,
             N=N
         )
 
-        # Add report name
-        report.name = "CCF assignment process (back-testing)"
-
-        return report
+        return Report(
+            reports=[subreport],
+            name="CCF assignment process (back-testing)"
+        )
 
     def validate_ead_covered_facilities(self):
         """
@@ -82,13 +83,15 @@ class CCFWrapper:
             ]
         )
 
-        report = self.validator.ead_covered_facilities(
+        subreport = self.validator.ead_covered_facilities(
             m_ead=m_ead,
             N=N
         )
 
-        report.name = "EAD covered facilities"
-        return report
+        return Report(
+            reports=[subreport],
+            name="EAD covered facilities"
+        )
 
     # ------------------------
     # PREDICTIVE ABILITY TESTS
@@ -106,7 +109,7 @@ class CCFWrapper:
         if len(facility_grades) > 20:
             raise ValidationError("More than 20 facility grades.")
 
-        grade_level_reports = {}
+        grade_level_reports = []
 
         # Perform tests in each grade level
         for grade in facility_grades:
@@ -149,7 +152,7 @@ class CCFWrapper:
                 dtype=float
             )
 
-            grade_level_reports[grade] = self.validator.predictive_power_ccf(
+            subreport = self.validator.predictive_power_ccf(
                 estimated_ccfs=estimated_ccfs,
                 realised_ccfs=realised_ccfs,
                 N=N,
@@ -158,11 +161,14 @@ class CCFWrapper:
                 floor=floor,
                 test_level=test_level
             )
+            subreport.name = f"Facility Grade - {grade}"
 
-        return {
-            "test": "CCF predictive ability",
-            "report": grade_level_reports
-        }
+            grade_level_reports.append(subreport)
+
+        return Report(
+            reports=grade_level_reports,
+            name="CCF Validation"
+        )
 
     def validate_ead_predictive_power(self, test_level=0.05):
         """
@@ -177,14 +183,16 @@ class CCFWrapper:
             (self.ccf_data["marked"] == "ead_covered")
         ]
 
-        report = self.validator.predictive_power_ead(
+        subreport = self.validator.predictive_power_ead(
             drawn_amounts=drawn_amounts,
             estimated_eads=estimated_eads,
             test_level=test_level
         )
-        report.name = "EAD predictive ability"
 
-        return report
+        return Report(
+            reports=[subreport],
+            name="EAD predictive ability"
+        )
 
     # --------------------
     # DISCRIMINATORY POWER
@@ -216,13 +224,15 @@ class CCFWrapper:
             ]
         )
 
-        report = self.validator.assignment_process_portfolio(
+        subreport = self.validator.assignment_process_portfolio(
             m_miss=m_miss,
             M=M
         )
-        report.name = "Assignment process (portfolio)"
 
-        return report
+        return Report(
+            reports=[subreport],
+            name="Assignment process (portfolio)"
+        )
 
     def validate_ccf_portfolio_distribution(self):
         return {
@@ -251,16 +261,18 @@ class CCFWrapper:
         exposure_end = self.ccf_data["exposure_at_end"]
         sum_drawings = self.ccf_data["drawn_amount"]
 
-        report = self.validator.ead_application_portfolio(
+        subreport = self.validator.ead_application_portfolio(
             m_ead=m_ead,
             estimated_EADs=estimated_EADs,
             sum_drawings=sum_drawings,
             exposure_start=exposure_start,
             exposure_end=exposure_end
         )
-        report.name = "EAD application portfolio"
 
-        return report
+        return Report(
+            reports=[subreport],
+            name="EAD application portfolio"
+        )
 
     def run_validation_tests(self):
         results = []
@@ -270,7 +282,7 @@ class CCFWrapper:
         results.append(self.validate_ead_covered_facilities())
 
         # # Predictive ability tests
-        # results.append(self.validate_ccf_predictive_power())
+        results.append(self.validate_ccf_predictive_power())
         # results.append(self.validate_ead_predictive_power())
 
         # # Discriminatory power test

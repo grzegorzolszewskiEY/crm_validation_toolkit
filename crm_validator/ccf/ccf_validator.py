@@ -5,7 +5,7 @@ This module contains code to validate CCF models.
 import numpy as np
 from crm_validator.exceptions import ValidationError
 from scipy.stats import ttest_1samp
-from crm_validator.report import Report, PlotParams
+from crm_validator.report import SubReport, PlotParams
 
 
 class CCFValidator:
@@ -36,7 +36,7 @@ class CCFValidator:
             raise ValidationError("N is greater than m_b - m_ex.")
 
         # Create report
-        return Report(
+        return SubReport(
             passed=True,
             metrics={
                 "m_ex/m_b": m_ex / m_b
@@ -68,7 +68,7 @@ class CCFValidator:
         if m_ead > N:
             raise ValidationError("m_ead is greater than N.")
 
-        return Report(
+        return SubReport(
             passed=True,
             metrics={
                 "m_ead/N": m_ead / N
@@ -132,7 +132,7 @@ class CCFValidator:
         if p_value > test_level:
             passed = False
 
-        return Report(
+        return SubReport(
             passed=passed,
             metrics={
                 "p-value": p_value,
@@ -197,7 +197,7 @@ class CCFValidator:
         if p_value < test_level:
             passed = False
 
-        return Report(
+        return SubReport(
             passed=passed,
             metrics={
                 "p-value": p_value,
@@ -238,7 +238,7 @@ class CCFValidator:
         if m_miss > M:
             raise ValidationError("M_miss is greater than M.")
 
-        return Report(
+        return SubReport(
             passed=True,
             metrics={
                 "m_miss/M": m_miss / M
@@ -274,7 +274,7 @@ class CCFValidator:
         exposure_start: float,
         exposure_end: float,
     ):
-        return Report(
+        return SubReport(
             passed=True,
             metrics={
                 "Total facilities": m_ead,

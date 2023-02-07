@@ -29,39 +29,43 @@ if __name__ == "__main__":
         ccf_tester = CCFWrapper(ccf_data)
 
         results = ccf_tester.run_validation_tests()
-        for test_result in results:
-            if type(test_result) == dict:
-                st.header(test_result["test"])
-                st.write(test_result["report"])
+        for report in results:
+            if type(report) == dict:
+                st.header(report["test"])
+                st.write(report["report"])
             else:
-                st.header(test_result.name)
-                st.markdown(
-                    "Test result : **"
-                    f"{'Passed' if test_result.passed else 'Failed'}"
-                    "**"
-                )
+                st.header(report.name)
+                for subreport in report:
+                    if subreport.name:
+                        st.subheader(subreport.name)
 
-                st.subheader("Calculated metrics")
-                metric_names = test_result.metrics.keys()
-                n_metrics = len(metric_names)
-                columns = st.columns(n_metrics)
-                for i, metric in enumerate(metric_names):
-                    columns[i].metric(
-                        label=metric,
-                        value=test_result.metrics[metric]
+                    st.markdown(
+                        "Test result : **"
+                        f"{'Passed' if subreport.passed else 'Failed'}"
+                        "**"
                     )
 
-                st.subheader("Report")
-                report_keys = test_result.reports.keys()
-                report_values = test_result.reports.values()
-                st.table(
-                    {
-                        "QUANTITY": report_keys,
-                        "VALUE": report_values
-                    }
-                )
+                    st.subheader("Calculated metrics")
+                    metric_names = subreport.metrics.keys()
+                    n_metrics = len(metric_names)
+                    columns = st.columns(n_metrics)
+                    for i, metric in enumerate(metric_names):
+                        columns[i].metric(
+                            label=metric,
+                            value=subreport.metrics[metric]
+                        )
 
-                if test_result.plots:
-                    st.subheader("Plots")
-                    for plot in test_result.plots:
-                        st.pyplot(plot)
+                    st.subheader("Report")
+                    report_keys = subreport.reports.keys()
+                    report_values = subreport.reports.values()
+                    st.table(
+                        {
+                            "QUANTITY": report_keys,
+                            "VALUE": report_values
+                        }
+                    )
+
+                    if subreport.plots:
+                        st.subheader("Plots")
+                        for plot in subreport.plots:
+                            st.pyplot(plot)
