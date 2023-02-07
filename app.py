@@ -5,8 +5,8 @@ a Streamlit UI. Still a demo.
 
 import pandas as pd
 import streamlit as st
-from crm_validator.ccf.ccf_wrapper import CCFWrapper
 
+from crm_validator.ccf.ccf_wrapper import CCFWrapper
 
 if __name__ == "__main__":
     # Set page title
@@ -23,49 +23,67 @@ if __name__ == "__main__":
             input_file,
             header=0
         )
+
+        # Show sample of data
         st.write("Data sample")
         st.write(ccf_data.head())
 
+        # Create an object of the validator class
         ccf_tester = CCFWrapper(ccf_data)
 
-        results = ccf_tester.run_validation_tests()
-        for report in results:
-            if type(report) == dict:
-                st.header(report["test"])
-                st.write(report["report"])
-            else:
-                st.header(report.name)
-                for subreport in report:
-                    if subreport.name:
-                        st.subheader(subreport.name)
+        # Run all validation tests
+        test_results = ccf_tester.run_validation_tests()
 
-                    st.markdown(
-                        "Test result : **"
-                        f"{'Passed' if subreport.passed else 'Failed'}"
-                        "**"
+        st.markdown("---")
+
+        # Display reports of each test
+        for report in test_results:
+            # Create heading
+            st.markdown(f"## {report.name}")
+            # Display description if exists
+            if report.description:
+                st.write(report.description)
+
+            # Iterate through subreports
+            for subreport in report:
+                # Add title as subheader if exists
+                if subreport.name:
+                    st.markdown(f"### {subreport.name}")
+                # Display description if exists
+                if subreport.description:
+                    st.subheader(subreport.description)
+
+                # Print result of report (pass/fail)
+                st.markdown(
+                    "Test result : **"
+                    f"{'Passed' if subreport.passed else 'Failed'}"
+                    "**"
+                )
+
+                # Section with metric calculations
+                st.markdown("#### Calculated metrics")
+                metric_names = subreport.metrics.keys()
+                n_metrics = len(metric_names)
+                columns = st.columns(n_metrics)
+                for i, metric in enumerate(metric_names):
+                    columns[i].metric(
+                        label=metric,
+                        value=subreport.metrics[metric]
                     )
 
-                    st.subheader("Calculated metrics")
-                    metric_names = subreport.metrics.keys()
-                    n_metrics = len(metric_names)
-                    columns = st.columns(n_metrics)
-                    for i, metric in enumerate(metric_names):
-                        columns[i].metric(
-                            label=metric,
-                            value=subreport.metrics[metric]
-                        )
+                st.markdown("#### Report values")
+                report_keys = subreport.reports.keys()
+                report_values = subreport.reports.values()
+                st.table(
+                    {
+                        "QUANTITY": report_keys,
+                        "VALUE": report_values
+                    }
+                )
 
-                    st.subheader("Report")
-                    report_keys = subreport.reports.keys()
-                    report_values = subreport.reports.values()
-                    st.table(
-                        {
-                            "QUANTITY": report_keys,
-                            "VALUE": report_values
-                        }
-                    )
+                if subreport.plots:
+                    st.markdown("#### Plots")
+                    for plot in subreport.plots:
+                        st.pyplot(plot)
 
-                    if subreport.plots:
-                        st.subheader("Plots")
-                        for plot in subreport.plots:
-                            st.pyplot(plot)
+            st.markdown("---")

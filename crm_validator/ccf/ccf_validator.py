@@ -3,9 +3,10 @@ This module contains code to validate CCF models.
 """
 
 import numpy as np
-from crm_validator.exceptions import ValidationError
 from scipy.stats import ttest_1samp
-from crm_validator.report import SubReport, PlotParams
+
+from crm_validator.exceptions import ValidationError
+from crm_validator.report import PlotParams, SubReport
 
 
 class CCFValidator:

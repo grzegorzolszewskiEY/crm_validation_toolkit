@@ -4,8 +4,10 @@ inputs to the validator, so multiple calculations of inputs to
 validator are not required.
 """
 
+from typing import List
 import numpy as np
 import pandas as pd
+
 from crm_validator.ccf.ccf_validator import CCFValidator
 from crm_validator.exceptions import ValidationError
 from crm_validator.report import Report
@@ -13,7 +15,15 @@ from crm_validator.report import Report
 
 class CCFWrapper:
     """
-    A class that takes in data to preprocess and input to validator
+    A class that takes in data to preprocess and input to validator.
+
+    Attributes
+    ----------
+        ccf_data : pd.DataFrame
+            The dataset containing CCF data with columns as
+            specified in README.
+        validator : CCFValidator
+            The validation class running each test.
     """
     def __init__(
         self,
@@ -59,7 +69,7 @@ class CCFWrapper:
         )
 
         return Report(
-            reports=[subreport],
+            subreports=[subreport],
             name="CCF assignment process (back-testing)"
         )
 
@@ -89,7 +99,7 @@ class CCFWrapper:
         )
 
         return Report(
-            reports=[subreport],
+            subreports=[subreport],
             name="EAD covered facilities"
         )
 
@@ -166,7 +176,7 @@ class CCFWrapper:
             grade_level_reports.append(subreport)
 
         return Report(
-            reports=grade_level_reports,
+            subreports=grade_level_reports,
             name="CCF Validation"
         )
 
@@ -190,7 +200,7 @@ class CCFWrapper:
         )
 
         return Report(
-            reports=[subreport],
+            subreports=[subreport],
             name="EAD predictive ability"
         )
 
@@ -230,7 +240,7 @@ class CCFWrapper:
         )
 
         return Report(
-            reports=[subreport],
+            subreports=[subreport],
             name="Assignment process (portfolio)"
         )
 
@@ -270,11 +280,14 @@ class CCFWrapper:
         )
 
         return Report(
-            reports=[subreport],
+            subreports=[subreport],
             name="EAD application portfolio"
         )
 
-    def run_validation_tests(self):
+    def run_validation_tests(self) -> List[Report]:
+        """
+        This runs all validation tests in order, and returns a list of Reports.
+        """
         results = []
 
         # Back testing tests
@@ -286,11 +299,11 @@ class CCFWrapper:
         # results.append(self.validate_ead_predictive_power())
 
         # # Discriminatory power test
-        results.append(self.validate_discriminatory_power())
+        # results.append(self.validate_discriminatory_power())
 
         # # Application portfolio tests
         results.append(self.validate_assignment_process_portfolio())
-        results.append(self.validate_ccf_portfolio_distribution())
+        # results.append(self.validate_ccf_portfolio_distribution())
         results.append(self.validate_ead_application_portfolio())
 
         return results

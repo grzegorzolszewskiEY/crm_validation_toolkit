@@ -25,7 +25,24 @@ class PlotParams:
 class SubReport:
     """
     This class is a basic report format.
-    Can be used for plotting.
+    It can be used for plotting (see `PlotParams`).
+
+    Attributes
+    ----------
+        `metrics` : dict
+            Holds pairs of metric_name : metric_value.
+            These are specified metrics to be reported.
+        `reports` : dict
+            Holds pairs of report_name : report_value.
+            These are values to be reported other than those in
+            `metrics`.
+        `name` : str [OPTIONAL]
+            Name of the sub-report.
+        `description` : str [OPTIONAL]
+            Description of the sub-report.
+        `plots` : list[PlotParams] [OPTIONAL]
+            A list of PlotParams for each plot to be made as
+            part of the report.
     """
     def __init__(
         self,
@@ -37,10 +54,11 @@ class SubReport:
         plots: List[PlotParams] = None
     ) -> None:
         self.name = name
+        self.description = description
         self.passed = passed
         self.metrics = metrics
+        # TODO : Support matrix reports
         self.reports = reports
-        self.description = description
         self.plots = []
 
         if plots:
@@ -52,6 +70,10 @@ class SubReport:
                 )
 
     def __str__(self) -> str:
+        """
+        This function allows Python to represent an object of
+        this class as a `str`.
+        """
         return str(
             {
                 NAME: self.name,
@@ -71,11 +93,9 @@ class SubReport:
 
         Parameters
         ----------
-            values : list
-                The list of names from the report to be plotted.
-            kind : str ["pie" | "line"]
-                Type of plot.
-                Supported values: "pie", "line".
+            plot_params : PlotParams
+                An object containing values, labels, and kind of plot
+                to be generated.
 
         Output
         ------
@@ -113,23 +133,43 @@ class SubReport:
 
 
 class Report:
+    """
+    This class is used to create an overall report for
+    a test.
+
+    Attributes
+    ----------
+        subreports : List[SubReport]
+            A list of sub-reports that is part of this
+            report. This is useful in cases where reports for
+            a validation test are generated per facility grade,
+            for instance. Then, each of those can be a
+            sub-report for the validation test.
+        name : str [OPTIONAL]
+            The name of the report.
+        description : str [OPTIONAL]
+            A description of the report.
+    """
     def __init__(
         self,
-        reports: List[SubReport],
-        name: str = None
+        subreports: List[SubReport],
+        name: str = None,
+        description: str = None
     ) -> None:
         self.name = name
-        self.reports = reports
+        self.description = description
+        self.subreports = subreports
 
     def __str__(self) -> str:
         return str(
             {
                 "name": self.name,
+                "description": self.description,
                 "sub-reports": [
-                    str(report) for report in self.reports
+                    str(report) for report in self.subreports
                 ]
             }
         )
 
     def __iter__(self) -> List[SubReport]:
-        return iter(self.reports)
+        return iter(self.subreports)
