@@ -20,23 +20,23 @@ Implemented
 
 Data requirements
 - CCF
-    - `estimated_CCF_cohort` : float
+    - `estimated_CCF_cohort` : float\
         Estimated CCF value in the beginnning of observation period.
-    - `estimated_CCF_fixed_horizon` : float
+    - `estimated_CCF_fixed_horizon` : float\
         Estimated CCF value 1 year before default.
-    - `realised_CCF` : float
+    - `realised_CCF` : float\
         Realised CCF value at the end of the observation period.
-    - `estimated_EAD` : float
+    - `estimated_EAD` : float\
         Estimate of EAD value.
-    - `exposure_at_beginning` : float
+    - `exposure_at_beginning` : float\
         Exposure at the beginning of the observation period.
-    - `exposure_at_end` : float
+    - `exposure_at_end` : float\
         Exposure at the end of the observation period.
-    - `drawn_amount` : float
+    - `drawn_amount` : float\
         Drawn amount at default.
-    - `default` : 0 | 1
+    - `default` : 0 | 1\
         Flag to denote if the facility defaulted.
-    - `marked` : "outlier" | "process_deficiency" | "ead_covered" | "ccf_covered"
+    - `marked` : "outlier" | "process_deficiency" | "ead_covered" | "ccf_covered"\
         This column specifies the facility type, to be able to assign data.
-    - `facility_grade` : str | float
+    - `facility_grade` : str | float\
         Facility grade level for each facility.
