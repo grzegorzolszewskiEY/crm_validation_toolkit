@@ -101,6 +101,7 @@ class SubReport:
         ------
             A Matplotlib figure.
         """
+        plt.ioff()
         fig = plt.figure()
 
         if plot_params.kind == "pie":
@@ -129,6 +130,7 @@ class SubReport:
         if plot_params.title:
             plt.title(plot_params.title)
 
+        plt.close()
         return fig
 
 
@@ -170,6 +172,57 @@ class Report:
                 ]
             }
         )
+
+    def print_output(self) -> str:
+        output_string = ""
+        # Display report heading
+        output_string += f"{'='*len(self.name)}" + "\n"
+        output_string += f"{self.name.upper()}" + "\n"
+        output_string += f"{'='*len(self.name)}" + "\n"
+
+        # Display description
+        if self.description is not None:
+            output_string += f"{self.description}" + "\n"
+            output_string += "\n"
+
+        # Display sub-reports
+        for subreport in self.subreports:
+            output_string += "\n"
+            indent_level = 1
+
+            # Display sub-report title
+            if subreport.name is not None:
+                output_string += "\t"*indent_level
+                output_string += f"{subreport.name.upper()}" + "\n"
+                output_string += "\t"*indent_level
+                output_string += f"{'-'*len(subreport.name)}" + "\n"
+                indent_level = 2
+
+            # Display description
+            if subreport.description is not None:
+                output_string += "\t"*indent_level
+                output_string += f"{subreport.description}" + "\n"
+                output_string += "\n"
+                indent_level = 2
+
+            output_string += "\t"*indent_level
+            output_string += "Metrics\n" + "\t" * indent_level + "-------\n"
+            # Display metrics
+            for metric in subreport.metrics:
+                output_string += "\t"*indent_level
+                output_string += f"{metric}\t:{subreport.metrics[metric]}\n"
+
+            output_string += "\n"
+            output_string += "\t"*indent_level
+            output_string += "Report Values\n"
+            output_string += "\t" * indent_level + "-------------" + "\n"
+            # Display reported values
+            for value in subreport.reports:
+                output_string += "\t"*indent_level
+                output_string += f"{value}\t:{subreport.reports[value]}" + "\n"
+
+        output_string += f"{'='*len(self.name)}" + "\n\n"
+        return output_string
 
     def __iter__(self) -> List[SubReport]:
         return iter(self.subreports)

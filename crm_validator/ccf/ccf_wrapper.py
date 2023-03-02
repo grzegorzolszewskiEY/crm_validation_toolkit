@@ -307,3 +307,25 @@ class CCFWrapper:
         results.append(self.validate_ead_application_portfolio())
 
         return results
+
+    def __call__(
+        self,
+        output_type: str
+    ):
+        """
+        Generates reports for the CCF validator.
+        Specify the output type as either "raw" to get them in a Report format,
+        or "output" to get it as a string with plots.
+        """
+        results = self.run_validation_tests()
+        if output_type == "raw":
+            return results
+        else:
+            output = ""
+            for result in results:
+                output = output + result.print_output()
+
+            if output_type == "print":
+                print(output)
+            elif output_type == "string":
+                return output
