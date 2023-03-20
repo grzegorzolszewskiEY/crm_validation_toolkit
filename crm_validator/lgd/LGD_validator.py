@@ -2,7 +2,7 @@ import pandas as pd
 import numpy as np
 from scipy.stats import t
 import warnings
-from t_test_assumptions import t_test_assumptions
+from crm_validator.util.t_test_assumptions import t_test_assumptions
 
 warnings.filterwarnings('ignore')
 
