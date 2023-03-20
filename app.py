@@ -5,7 +5,7 @@ a Streamlit UI. Still a demo.
 
 import streamlit as st
 
-from ccf_app import ccf_page
+from crm_validator.ccf.ccf_app import ccf_page
 from LGD_validation_app import pd_lgd_app
 
 # Get required inputs

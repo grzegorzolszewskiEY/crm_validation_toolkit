@@ -1,17 +1,20 @@
-import streamlit as st
-import numpy as np
-import pandas as pd 
-from scipy.stats import uniform, binom, norm
-import gAUC_class 
-import LGDvalidator
-import matplotlib.pyplot as plt
-from LGD_validator import LGD_Validator
-from PDvalidation import PD_validator
 from textwrap import wrap
+
+import matplotlib.pyplot as plt
+import numpy as np
+import pandas as pd
+import streamlit as st
+from scipy.stats import binom, norm, uniform
+
+import gAUC_class
+from lgd_validator.LGDvalidator import LGDValidator
+from lgd_validator.LGD_validator import LGD_Validator
+from pd_validator.PDvalidation import PD_validator
+
 
 def pd_lgd_app(st, uploaded_files):
     #### Validators ####
-    first_validator = LGDvalidator.LGDvalidator()
+    first_validator = LGDValidator()
     second_validator = LGD_Validator()
 
     st.title("LGD Validator")

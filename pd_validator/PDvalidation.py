@@ -2,9 +2,9 @@ import numpy as np
 import pandas as pd 
 from scipy.stats import uniform, binom, norm, beta
 import gAUC_class 
-import LGDvalidator
+#import LGDvalidator
 import matplotlib.pyplot as plt
-from LGD_validator import LGD_Validator
+#from LGD_validator import LGD_Validator
 from sklearn import metrics
 from sklearn.metrics import roc_curve
 import warnings

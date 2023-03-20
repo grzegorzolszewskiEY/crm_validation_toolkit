@@ -5,7 +5,7 @@ from gAUC_class import gAUC
 from t_test_assumptions import t_test_assumptions
 import matplotlib.pyplot as plt
 
-class LGDvalidator():
+class LGDValidator():
 
     def ___init___(self) -> None:
         pass
