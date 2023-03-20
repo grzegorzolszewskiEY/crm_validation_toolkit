@@ -220,4 +220,4 @@ def pd_lgd_app(st, uploaded_files):
                     st.write(outputs_lgdd[i])
                 else:
                     st.dataframe(outputs_lgdd[i])
-        st.markdown("---")
+                    

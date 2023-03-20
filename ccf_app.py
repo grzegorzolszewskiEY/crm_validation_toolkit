@@ -10,7 +10,7 @@ from crm_validator.ccf.ccf_wrapper import CCFWrapper
 
 def ccf_page(st, input_file):
     # Set page title
-    st.title("CCF Validator Demo")
+    st.title("CCF Validator")
 
     st.write("Demo page to show validator UI")
 
