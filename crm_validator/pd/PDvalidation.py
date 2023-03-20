@@ -1,7 +1,7 @@
 import numpy as np
 import pandas as pd 
 from scipy.stats import uniform, binom, norm, beta
-import gAUC_class 
+from crm_validator.util.gAUC_class import gAUC
 #import LGDvalidator
 import matplotlib.pyplot as plt
 #from LGD_validator import LGD_Validator

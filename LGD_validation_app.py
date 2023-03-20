@@ -6,7 +6,7 @@ import pandas as pd
 import streamlit as st
 from scipy.stats import binom, norm, uniform
 
-import gAUC_class
+from crm_validator.util.gAUC_class import gAUC
 from crm_validator.lgd.LGDvalidator import LGDValidator
 from crm_validator.lgd.LGD_validator import LGD_Validator
 from crm_validator.pd.PDvalidation import PD_validator
