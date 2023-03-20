@@ -119,9 +119,9 @@ def pd_lgd_app(st, uploaded_files):
         matrix = first_validator.contigency_table(df = segmentated_data, estimated_segment_col= 'Estimated_LGD_Bucket', real_segment_col= 'Realised_LGD_Bucket')
         LGD_back_contigency = first_validator.contigency_table_df(matrix)
 
-        gAUC =  gAUC_class.gAUC()
-        curr_gAUC = gAUC.calc_gAUC(matrix)
-        curr_std = gAUC.standard_dev(matrix)
+        gAUCc =  gAUC()
+        curr_gAUC = gAUCc.calc_gAUC(matrix)
+        curr_std = gAUCc.standard_dev(matrix)
         var_std = curr_std**2
         gAUC_metric_df = pd.DataFrame(columns= ['current gAUC', 'std', 'var'])
         gAUC_metric_df.loc[0] = [curr_gAUC, curr_std, var_std]
