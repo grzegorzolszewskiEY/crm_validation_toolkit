@@ -15,6 +15,7 @@ def ccf_page(st, input_file):
     st.write("Demo page to show validator UI")
 
     if input_file is not None:
+        input_file.seek(0)
         # Only run this if input is provided
         ccf_data = pd.read_csv(
             input_file,
