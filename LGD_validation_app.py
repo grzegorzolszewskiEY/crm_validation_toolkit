@@ -7,9 +7,9 @@ import streamlit as st
 from scipy.stats import binom, norm, uniform
 
 import gAUC_class
-from lgd_validator.LGDvalidator import LGDValidator
-from lgd_validator.LGD_validator import LGD_Validator
-from pd_validator.PDvalidation import PD_validator
+from crm_validator.lgd.LGDvalidator import LGDValidator
+from crm_validator.lgd.LGD_validator import LGD_Validator
+from crm_validator.pd.PDvalidation import PD_validator
 
 
 def pd_lgd_app(st, uploaded_files):

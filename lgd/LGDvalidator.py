@@ -2,7 +2,7 @@ import numpy as np
 import pandas as pd 
 from scipy.stats import uniform, binom, norm, beta, t
 from gAUC_class import gAUC
-from t_test_assumptions import t_test_assumptions
+from crm_validator.util.t_test_assumptions import t_test_assumptions
 import matplotlib.pyplot as plt
 
 class LGDValidator():

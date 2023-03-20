@@ -18,8 +18,9 @@ for uploaded_file in uploaded_files:
         input_file = uploaded_file
 if uploaded_files is not None:
     pd_lgd_app(st, uploaded_files)
-    with st.expander('CCF validation part'):
-        ccf_page(st, input_file)
+    if input_file is not None:
+        with st.expander('CCF validation part'):
+            ccf_page(st, input_file)
 st.markdown("---")
 
  
