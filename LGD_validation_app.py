@@ -172,8 +172,8 @@ def pd_lgd_app(st, uploaded_files):
         outputs_lgdd = second_validator.lgdd_t_test_report(LGD_data, relevant_obs_per_beg, relevant_obs_per_end, 'end_of_default', 0.05)
 
         with st.expander('LGD data preview'):
-            st.dataframe(input_file_LGD)
-            
+            st.dataframe(LGD_data)
+
         with st.expander('LGD back-testing using a t-test'):
             st.write('Summary statistics')
             st.dataframe(LGD_back_df)
