@@ -59,6 +59,9 @@ def pd_lgd_app(st, uploaded_files):
 
         quali_inf = PD_valid.qualitative_validation1(input_file_PD)
         quali_inf_2 = PD_valid.qualitative_validation2(input_file_PD)
+
+        with st.expander('PD data preview'):
+            st.dataframe(input_file_PD)
         
         with st.expander('PD back-testing using a Jeffreys test'):
             st.write('Jeffreys test both at individual grade level and at portfolio level.') 
@@ -168,6 +171,9 @@ def pd_lgd_app(st, uploaded_files):
 
         outputs_lgdd = second_validator.lgdd_t_test_report(LGD_data, relevant_obs_per_beg, relevant_obs_per_end, 'end_of_default', 0.05)
 
+        with st.expander('LGD data preview'):
+            st.dataframe(input_file_LGD)
+            
         with st.expander('LGD back-testing using a t-test'):
             st.write('Summary statistics')
             st.dataframe(LGD_back_df)
