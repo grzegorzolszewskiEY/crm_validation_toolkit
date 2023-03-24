@@ -175,12 +175,6 @@ class PD_validator(object):
         S = self.test_statistic(auc_init)
         p_val = (1  - norm.cdf(S, loc=0, scale=1))
         summary_dict = {'Current auc': auc_curr, 'S metric': S, 'var':var, 'p-value':p_val}
-        #print('The current AUC is: ', auc_curr)
-        #print('The AUC at initial validation was: ', auc_init)
-        #print('The value for the test statistic is: ', S)
-        #print('The value for the estimated variance is: ', var)
-        #print('the p-value is', p_val)
-        #print('The null hypothesis is that the initial AUC is smaller than the current AUC')
         summary_dict = pd.DataFrame(columns= ['Current auc', 'S metric', 'var', 'p-value'])
         summary_dict.loc[0] = [auc_curr, S, var, p_val]
         return summary_dict, fig

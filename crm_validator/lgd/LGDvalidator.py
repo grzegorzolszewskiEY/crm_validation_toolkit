@@ -156,6 +156,8 @@ class LGDValidator():
                                 'original_exposure':original_exposure})
             results_df = pd.concat([results_df, new_row.to_frame().T], ignore_index=True)
         results_df[['N']] = results_df[['N']].astype(int) #change column type to int
+        results_df[['segment']] = results_df[['segment']].astype(int)
+        
         return results_df
 
     def miss_prop(self, data: pd.DataFrame, def_col: str, miss_col: str):

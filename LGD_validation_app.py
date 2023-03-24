@@ -62,7 +62,12 @@ def pd_lgd_app(st, uploaded_files):
 
         with st.expander('PD data preview'):
             st.dataframe(input_file_PD)
-        
+        with st.expander('PD qualitative validation tools'):
+            st.write(quali_inf[0], quali_inf[1])
+            st.write(quali_inf[2], quali_inf[3])
+            st.write(quali_inf[4], quali_inf[5])
+            st.write(quali_inf_2[0], quali_inf_2[1])
+
         with st.expander('PD back-testing using a Jeffreys test'):
             st.write('Jeffreys test both at individual grade level and at portfolio level.') 
             st.write('The null hypothesis is that the estimated PD is greater than the true one.')
@@ -75,12 +80,6 @@ def pd_lgd_app(st, uploaded_files):
             st.pyplot(summ_disc_df[1])
             st.write('Current AUC vs. AUC at initial validation/development')
             st.dataframe(summ_disc_df[0])
-
-        with st.expander('PD qualitative validation tools'):
-            st.write(quali_inf[0], quali_inf[1])
-            st.write(quali_inf[2], quali_inf[3])
-            st.write(quali_inf[4], quali_inf[5])
-            st.write(quali_inf_2[0], quali_inf_2[1])
             
         with st.expander('PD stability'):
             cv_initial = st.number_input('Insert a initial CV', value =0.1)
