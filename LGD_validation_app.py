@@ -17,7 +17,7 @@ def pd_lgd_app(st, uploaded_files):
     first_validator = LGDValidator()
     second_validator = LGD_Validator()
 
-    st.title("LGD Validator")
+    st.title("IRB Validator")
 
     st.write("The application performs validation in accordance with the guidelines contained in the document: [link](https://www.bankingsupervision.europa.eu/banking/tasks/internal_models/shared/pdf/instructions_validation_reporting_credit_risk.en.pdf)")
 
@@ -218,6 +218,7 @@ def pd_lgd_app(st, uploaded_files):
 
         with st.expander('ELBE backtesting using t-test'):
             st.write('For the relevant year reports has been created for ELBE at the moment of default and one, three, five, seven years after default.')
+            st.write('The null hypothesis for t-test is that ELBE is equal to realised LGD')
             if type(outputs_elbe[0]) == str:
                 st.write(outputs_elbe[0])
             else:
@@ -230,6 +231,7 @@ def pd_lgd_app(st, uploaded_files):
                     st.dataframe(outputs_elbe[i])
         
         with st.expander('LGD in-default backtesting using t-test'):
+            st.write('The null hypothesis for t-test is that estimated LGD in-default is greater then realised LGD')
             for i in [0, 1, 2, 3, 4]:
                 if type(outputs_lgdd[i]) == str:
                     st.write(outputs_lgdd[i])
