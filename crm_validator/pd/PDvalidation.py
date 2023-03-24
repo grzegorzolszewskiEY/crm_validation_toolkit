@@ -171,6 +171,7 @@ class PD_validator(object):
         plt.xlabel('False positive rate')
         plt.ylabel('True positive rate')
         auc_curr = self.mannwhitney_auc()
+        #auc_curr = metrics.roc_auc_score(self.def_or_not, self.PD_score)
         var = self.mannwhitney_var()
         S = self.test_statistic(auc_init)
         p_val = (1  - norm.cdf(S, loc=0, scale=1))

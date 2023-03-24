@@ -155,8 +155,14 @@ def pd_lgd_app(st, uploaded_files):
         segment_col_initial= 'Estimated_LGD_Bucket', segment_col_curr = 'Estimated_LGD_Bucket')
         PSI = population_comparison['Contribution'].sum()
         psi_val_df = pd.DataFrame(columns= ['PSI'])
-        psi_val_df.loc[0] = [PSI]  
-
+        psi_val_df.loc[0] = [PSI]
+        if PSI < 0.1:
+            psi_val_df['Interpretation'] = 'No major change'
+        elif PSI < 0.2:
+            psi_val_df['Interpretation'] = 'Moderate population change'
+        else:
+            psi_val_df['Interpretation'] = 'Significant population change'
+        
         lgd_def_not_closed_df = second_validator.lgd_defaulted_portfolio_v1(LGD_data, relevant_obs_per_beg, 
                                                                             relevant_obs_per_end, 'beginning_of_default', 'end_of_default')[0]
 
@@ -175,6 +181,7 @@ def pd_lgd_app(st, uploaded_files):
 
         with st.expander('LGD back-testing using a t-test'):
             st.write('Summary statistics')
+            st.write('The null hypothesis for t-test is that estimated LGD is greater than true LGD')
             st.dataframe(LGD_back_df)
             st.write('Contigency table (rows represent estimated LGD segment and columns represent relised LGD segment)')
             st.dataframe(LGD_back_contigency)

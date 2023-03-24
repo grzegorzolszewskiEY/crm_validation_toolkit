@@ -178,8 +178,8 @@ class LGDValidator():
 
     def pick_selected_obs(self, dataset: pd.DataFrame, relevant_obs_per_beg: int, relevant_obs_per_end: int, end_def_col: str):
         '''
-            relevant_obs_per_beg - beginning o frelevant observation period
-            relevant_obs_per_end - 
+            relevant_obs_per_beg - beginning o relevant observation period
+            relevant_obs_per_end - end of relevant observation period
             end_def_col - column name in dataset which contains information about date of default status ends.
             pick_selected_obs function returns indexes of observations in dataset for which default state ends 
             within relevant observation period 
