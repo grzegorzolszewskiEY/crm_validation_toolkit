@@ -82,7 +82,7 @@ def pd_lgd_app(st, uploaded_files):
             st.dataframe(summ_disc_df[0])
             
         with st.expander('PD stability'):
-            cv_initial = st.number_input('Insert a initial CV', value =0.1)
+            cv_initial = st.number_input('Insert a initial CV', value =0.1, step = 0.001)
             summ_stab_df = PD_valid.summary_stability_2(cv_initial)
 
             st.write('The migration matrix is:')
@@ -227,7 +227,7 @@ def pd_lgd_app(st, uploaded_files):
             else:
                 st.dataframe(outputs_elbe[0])
 
-            for i in [0, 1, 2, 3, 4]:
+            for i in [1, 2, 3, 4]:
                 if type(outputs_elbe[i]) == str:
                     st.write(outputs_elbe[i])
                 else:
