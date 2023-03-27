@@ -11,7 +11,6 @@ from crm_validator.lgd.LGDvalidator import LGDValidator
 from crm_validator.lgd.LGD_validator import LGD_Validator
 from crm_validator.pd.PDvalidation import PD_validator
 
-
 def pd_lgd_app(st, uploaded_files):
     #### Validators ####
     first_validator = LGDValidator()
@@ -77,6 +76,7 @@ def pd_lgd_app(st, uploaded_files):
             init_AUC = st.number_input('Insert a initial AUC', value =0.3)
             summ_disc_df = PD_valid.summary_discr_power(init_AUC)
             st.write('ROC Curve')
+            st.write('The null hypothesis is that AUC at time of development is smaller than the AUC for relevenat observation period.')
             st.pyplot(summ_disc_df[1])
             st.write('Current AUC vs. AUC at initial validation/development')
             st.dataframe(summ_disc_df[0])
@@ -191,6 +191,9 @@ def pd_lgd_app(st, uploaded_files):
             st.dataframe(gAUC_metric_df)
 
             st.write('gAUC current and initial')
+            st.write('''The null hypothesis of the test is that the gAUC at the time of 
+            development is smaller than the gAUC for the relevant observation period.
+            ''')
             init_gAUC = st.number_input('Insert a initial gAUC', value=0.5)
             S_metric_df = first_validator.normal_test(curr_gAUC, init_gAUC, curr_std)
             st.dataframe(S_metric_df)

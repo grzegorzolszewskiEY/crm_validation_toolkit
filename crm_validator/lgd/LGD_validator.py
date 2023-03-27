@@ -77,12 +77,11 @@ class LGD_Validator:
         exposure_beginning = df_beginning['exposure_0y_after_default']
         elbe_beginning = df_beginning['ELBE_0y_after_default']
 
-        output_beginning = pd.DataFrame(columns=['average RWEA', 'RWEA total sum', 'exposure total sum',
+        output_beginning = pd.DataFrame(columns=['average RWEA',
                                                  'average exposure', 'average ELBE',
                                                  'number of facilities', 'average days in default'])
 
-        output_beginning.loc[0] = [int(np.average(rwea_beginning)), sum(rwea_beginning),
-                                   sum(exposure_beginning), int(np.average(exposure_beginning)),
+        output_beginning.loc[0] = [int(np.average(rwea_beginning)), int(np.average(exposure_beginning)),
                                    np.average(elbe_beginning), df_beginning.shape[0],
                                    int(np.average(df_beginning['default_in_days']))]
 
